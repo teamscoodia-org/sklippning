@@ -5,7 +5,6 @@ const services = [
   { name: "Barnklippning", price: "160 SEK", desc: "Klippning för barn upp till 12 år" },
   { name: "Damklippning", price: "350 SEK", desc: "Klippning och styling för dam" },
   { name: "Skäggtrimning", price: "150 SEK", desc: "Trimning och formning av skägg" },
-  { name: "Klippning & Skägg", price: "500 SEK", desc: "Komplett paket med klippning och skäggtrimning" },
   { name: "Huvudrakning", price: "200 SEK", desc: "Noggrann rakning av hela huvudet" },
   { name: "Trådning hela ansikte", price: "200 SEK", desc: "Skonsam trådning av hela ansiktet" },
   { name: "Trådning ögonbryn", price: "100 SEK", desc: "Formning av ögonbryn med trådning" },
