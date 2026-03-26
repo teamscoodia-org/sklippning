@@ -17,6 +17,7 @@ type BookingRecord = {
 
 const TIMESLOTS_PATH = path.join(process.cwd(), "data", "timeslots.json");
 const BOOKINGS_PATH = path.join(process.cwd(), "data", "bookings.json");
+const BOOKINGS_LOCK_PATH = path.join(process.cwd(), "data", "bookings.lock");
 
 type Slot = {
   id: string;
@@ -40,14 +41,58 @@ async function readDailyTimes(): Promise<string[]> {
 async function readBookings(): Promise<BookingRecord[]> {
   try {
     const raw = await fs.readFile(BOOKINGS_PATH, "utf8");
-    return JSON.parse(raw) as BookingRecord[];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? (parsed as BookingRecord[]) : [];
   } catch {
     return [];
   }
 }
 
-async function writeBookings(bookings: BookingRecord[]): Promise<void> {
-  await fs.writeFile(BOOKINGS_PATH, JSON.stringify(bookings, null, 2), "utf8");
+async function sleep(ms: number): Promise<void> {
+  await new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function acquireLock(
+  lockPath: string,
+  retries = 30,
+  delayMs = 100,
+): Promise<fs.FileHandle> {
+  for (let attempt = 0; attempt < retries; attempt += 1) {
+    try {
+      return await fs.open(lockPath, "wx");
+    } catch {
+      await sleep(delayMs);
+    }
+  }
+
+  throw new Error("Could not acquire file lock");
+}
+
+async function writeJsonAtomic(targetPath: string, data: unknown): Promise<void> {
+  const tempPath = `${targetPath}.tmp`;
+  const content = `${JSON.stringify(data, null, 2)}\n`;
+  await fs.writeFile(tempPath, content, "utf8");
+  await fs.rename(tempPath, targetPath);
+}
+
+async function saveBookingSafely(newBooking: BookingRecord): Promise<boolean> {
+  const lockHandle = await acquireLock(BOOKINGS_LOCK_PATH);
+  try {
+    const bookings = await readBookings();
+    const alreadyBooked = bookings.some(
+      (booking) => booking.slotId === newBooking.slotId,
+    );
+    if (alreadyBooked) {
+      return false;
+    }
+
+    bookings.push(newBooking);
+    await writeJsonAtomic(BOOKINGS_PATH, bookings);
+    return true;
+  } finally {
+    await lockHandle.close();
+    await fs.unlink(BOOKINGS_LOCK_PATH).catch(() => undefined);
+  }
 }
 
 function buildUpcomingWeekSlots(dailyTimes: string[]): Slot[] {
@@ -111,15 +156,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: "Tiden hittades inte." }, { status: 404 });
   }
 
-  const bookings = await readBookings();
-  const alreadyBooked = bookings.some((booking) => booking.slotId === body.slotId);
-  if (alreadyBooked) {
-    return NextResponse.json(
-      { message: "Tiden ar redan bokad, valj en annan tid." },
-      { status: 409 },
-    );
-  }
-
   const bookingRecord: BookingRecord = {
     id: crypto.randomUUID(),
     slotId: body.slotId,
@@ -132,8 +168,14 @@ export async function POST(req: Request) {
     time: selectedSlot.time,
     createdAt: new Date().toISOString(),
   };
-  bookings.push(bookingRecord);
-  await writeBookings(bookings);
+
+  const saved = await saveBookingSafely(bookingRecord);
+  if (!saved) {
+    return NextResponse.json(
+      { message: "Tiden ar redan bokad, valj en annan tid." },
+      { status: 409 },
+    );
+  }
 
   return NextResponse.json({
     message: "Bokningen ar mottagen och sparad.",
