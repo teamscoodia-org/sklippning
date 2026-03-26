@@ -1,5 +1,4 @@
 import Image from "next/image";
-import logo from "@/assets/logo.jpeg";
 
 const Header = () => {
   return (
@@ -7,11 +6,11 @@ const Header = () => {
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Image
-            src={logo}
+            src="/logo.svg"
             alt="S Klipning logo"
             width={40}
             height={40}
-            className="h-10 w-10 rounded-full object-cover"
+            className="h-10 w-10 object-contain"
           />
           <span className="font-heading text-xl font-semibold tracking-wide">S Klipning</span>
         </div>

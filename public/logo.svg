@@ -1,0 +1,10 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">S Klipning logo</title>
+  <desc id="desc">A stylized S with scissor handles</desc>
+  <rect x="4" y="4" width="120" height="120" rx="24" fill="#111111"/>
+  <path d="M82 30C69 26 50 30 46 44C43 55 53 62 64 67C75 72 85 77 82 88C79 98 66 102 53 98" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="38" cy="92" r="10" stroke="#FFFFFF" stroke-width="6"/>
+  <circle cx="56" cy="92" r="10" stroke="#FFFFFF" stroke-width="6"/>
+  <path d="M45 84L86 45" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
+  <path d="M58 84L92 58" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
+</svg>
