@@ -58,14 +58,14 @@ const Contact = () => {
 
           <div className="rounded-lg overflow-hidden border border-border h-72 md:h-auto">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d8143.14!2d18.0327!3d59.3818!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x465f9d12a5e8a34b%3A0x4020b28eb2b3b0!2sBergshamra%2C%20Solna!5e0!3m2!1ssv!2sse!4v1"
+              src="https://maps.google.com/maps?q=R%C3%A5djursstigen%207%2C%20170%2076%20Solna&z=15&output=embed"
               width="100%"
               height="100%"
               style={{ border: 0, minHeight: "288px" }}
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title="S Klipning location"
+              title="S Barbershop location"
             />
           </div>
         </div>
