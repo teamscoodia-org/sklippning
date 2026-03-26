@@ -1,4 +1,4 @@
-import { MapPin, Phone, Clock, Instagram } from "lucide-react";
+import { MapPin, Phone, Clock } from "lucide-react";
 
 const Contact = () => {
   return (
@@ -39,9 +39,8 @@ const Contact = () => {
               <div>
                 <h3 className="font-heading text-lg font-medium mb-1">Öppettider</h3>
                 <div className="text-muted-foreground space-y-1">
-                  <p>Måndag – Fredag: 09:00 – 18:00</p>
-                  <p>Lördag: 10:00 – 16:00</p>
-                  <p>Söndag: Stängt</p>
+                  <p>Måndag – Lördag: 09.30 – 17.00</p>
+                  <p>Söndag: 11.00 – 19.00</p>
                 </div>
               </div>
             </div>
@@ -50,7 +49,9 @@ const Contact = () => {
               <Phone className="w-5 h-5 text-primary mt-1 shrink-0" />
               <div>
                 <h3 className="font-heading text-lg font-medium mb-1">Kontakt</h3>
-                <p className="text-muted-foreground">Ring eller kom förbi!</p>
+                <a href="tel:0769541157" className="text-muted-foreground hover:text-primary transition-colors">
+                  07 6954 11 57
+                </a>
               </div>
             </div>
           </div>

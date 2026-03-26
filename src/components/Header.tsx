@@ -18,6 +18,9 @@ const Header = () => {
           <a href="#tjanster" className="text-muted-foreground hover:text-primary transition-colors">Tjänster</a>
           <a href="#om" className="text-muted-foreground hover:text-primary transition-colors">Om oss</a>
           <a href="#kontakt" className="text-muted-foreground hover:text-primary transition-colors">Kontakt</a>
+          <a href="tel:0769541157" className="text-primary font-medium hover:opacity-90 transition-opacity">
+            07 6954 11 57
+          </a>
         </nav>
       </div>
     </header>
