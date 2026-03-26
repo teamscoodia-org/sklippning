@@ -1,6 +1,5 @@
 import Image from "next/image";
 import heroImage from "@/assets/hero-barbershop.jpg";
-import logo from "@/assets/logo.jpeg";
 
 const Hero = () => {
   return (
@@ -9,7 +8,7 @@ const Hero = () => {
       <div className="absolute inset-0">
         <Image
           src={heroImage}
-          alt="S Klipning barbershop interior"
+          alt="S Barbershop i Bergshamra Solna"
           fill
           priority
           sizes="100vw"
@@ -21,17 +20,17 @@ const Hero = () => {
       {/* Content */}
       <div className="relative z-10 text-center px-6 max-w-3xl mx-auto">
         <Image
-          src={logo}
-          alt="S Klipning"
+          src="/logo.svg"
+          alt="S Barbershop logo"
           width={144}
           height={144}
-          className="mx-auto mb-8 h-28 w-28 animate-fade-in-up rounded-full border-2 border-primary/30 md:h-36 md:w-36"
+          className="mx-auto mb-8 h-28 w-28 animate-fade-in-up border-2 border-primary/30 p-2 md:h-36 md:w-36"
         />
         <h1 className="text-5xl md:text-7xl font-heading font-bold mb-4 animate-fade-in-up" style={{ animationDelay: "0.1s", opacity: 0 }}>
-          S <span className="text-gradient-gold">Klipning</span>
+          S <span className="text-gradient-gold">Barbershop</span>
         </h1>
         <p className="text-xl md:text-2xl text-muted-foreground font-light mb-2 animate-fade-in-up" style={{ animationDelay: "0.2s", opacity: 0 }}>
-          Herrfrisör i Bergshamra, Stockholm
+          Herrklippning i Bergshamra och Solna
         </p>
         <p className="text-muted-foreground mb-10 animate-fade-in-up" style={{ animationDelay: "0.3s", opacity: 0 }}>
           Stil, precision och kvalitet sedan dag ett.
