@@ -6,8 +6,8 @@ const About = () => {
           Om <span className="text-gradient-gold">Oss</span>
         </h2>
         <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-          S Klipning är din lokala herrfrisör i Bergshamra, Stockholm. Vi erbjuder
-          klassiska och moderna herrklippningar i en avslappnad miljö. Hos oss får du
+          S Barbershop ligger på Rådjursstigen 7 i Solna. Vi erbjuder klassiska och
+          moderna klippningar samt behandlingar i en avslappnad miljö. Hos oss får du
           alltid en personlig upplevelse med fokus på kvalitet och stil.
         </p>
         <p className="text-muted-foreground leading-relaxed">

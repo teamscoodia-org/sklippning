@@ -9,7 +9,7 @@ const Contact = () => {
           <h2 className="text-4xl md:text-5xl font-heading font-semibold mb-4">
             Hitta <span className="text-gradient-gold">Hit</span>
           </h2>
-          <p className="text-muted-foreground text-lg">Välkommen till oss i Bergshamra</p>
+          <p className="text-muted-foreground text-lg">Välkommen till S Barbershop i Solna</p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-12">
@@ -18,7 +18,19 @@ const Contact = () => {
               <MapPin className="w-5 h-5 text-primary mt-1 shrink-0" />
               <div>
                 <h3 className="font-heading text-lg font-medium mb-1">Adress</h3>
-                <p className="text-muted-foreground">Bergshamra<br />Stockholm</p>
+                <p className="text-muted-foreground">
+                  S Barbershop
+                  <br />
+                  Rådjursstigen 7, 170 76 Solna
+                </p>
+                <a
+                  href="https://maps.app.goo.gl/SKQbtgeGRWNutWBB7?g_st=aw"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-block mt-2 text-primary hover:underline"
+                >
+                  Öppna i Google Maps
+                </a>
               </div>
             </div>
 

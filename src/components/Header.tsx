@@ -7,12 +7,12 @@ const Header = () => {
         <div className="flex items-center gap-3">
           <Image
             src="/logo.svg"
-            alt="S Klipning logo"
+            alt="S Barbershop logo"
             width={40}
             height={40}
             className="h-10 w-10 object-contain"
           />
-          <span className="font-heading text-xl font-semibold tracking-wide">S Klipning</span>
+          <span className="font-heading text-xl font-semibold tracking-wide">S Barbershop</span>
         </div>
         <nav className="hidden md:flex items-center gap-8 text-sm font-body">
           <a href="#tjanster" className="text-muted-foreground hover:text-primary transition-colors">Tjänster</a>

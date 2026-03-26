@@ -1,12 +1,16 @@
 import { Scissors, Clock, MapPin, Phone } from "lucide-react";
 
 const services = [
-  { name: "Herrklippning", price: "350 kr", desc: "Klassisk herrklippning med konsultation" },
-  { name: "Skägg trimning", price: "200 kr", desc: "Formning och trimning av skägg" },
-  { name: "Klippning & Skägg", price: "500 kr", desc: "Komplett paket med klippning och skägg" },
-  { name: "Maskinklippning", price: "250 kr", desc: "Kort klippning med maskin" },
-  { name: "Barnklippning", price: "250 kr", desc: "Klippning för barn under 12 år" },
-  { name: "Huvudrakning", price: "200 kr", desc: "Slät rakning av huvud" },
+  { name: "Herrklippning", price: "200 SEK", desc: "Klassisk herrklippning med rådgivning" },
+  { name: "Barnklippning", price: "160 SEK", desc: "Klippning för barn upp till 12 år" },
+  { name: "Damklippning", price: "350 SEK", desc: "Klippning och styling för dam" },
+  { name: "Skäggtrimning", price: "150 SEK", desc: "Trimning och formning av skägg" },
+  { name: "Klippning & Skägg", price: "500 SEK", desc: "Komplett paket med klippning och skäggtrimning" },
+  { name: "Huvudrakning", price: "200 SEK", desc: "Noggrann rakning av hela huvudet" },
+  { name: "Trådning hela ansikte", price: "200 SEK", desc: "Skonsam trådning av hela ansiktet" },
+  { name: "Trådning ögonbryn", price: "100 SEK", desc: "Formning av ögonbryn med trådning" },
+  { name: "Huvudmassage med olja", price: "150 SEK", desc: "Avslappnande huvudmassage med olja" },
+  { name: "Ansiktsmassage", price: "300 SEK", desc: "Avkopplande ansiktsmassage" },
 ];
 
 const Services = () => {

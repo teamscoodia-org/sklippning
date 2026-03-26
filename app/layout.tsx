@@ -4,8 +4,8 @@ import "./globals.css";
 import Providers from "./providers";
 
 export const metadata: Metadata = {
-  title: "S Klipning",
-  description: "Herrfrisör i Bergshamra, Stockholm.",
+  title: "S Barbershop",
+  description: "Herr- och damfrisor i Solna. Rådjursstigen 7, 170 76 Solna.",
 };
 
 interface RootLayoutProps {
