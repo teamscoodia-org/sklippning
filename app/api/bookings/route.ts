@@ -1,6 +1,5 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import nodemailer from "nodemailer";
 import { NextResponse } from "next/server";
 
 type BookingRecord = {
@@ -72,57 +71,6 @@ function buildUpcomingWeekSlots(dailyTimes: string[]): Slot[] {
   return slots;
 }
 
-async function sendBookingEmail(input: {
-  customerName: string;
-  customerEmail: string;
-  customerPhone: string;
-  service: string;
-  date: string;
-  time: string;
-  note?: string;
-}) {
-  const {
-    SMTP_HOST,
-    SMTP_PORT,
-    SMTP_USER,
-    SMTP_PASS,
-    BOOKING_NOTIFY_EMAIL,
-  } = process.env;
-
-  if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS) {
-    return { sent: false, reason: "missing_smtp_config" as const };
-  }
-
-  const transport = nodemailer.createTransport({
-    host: SMTP_HOST,
-    port: Number(SMTP_PORT),
-    secure: Number(SMTP_PORT) === 465,
-    auth: {
-      user: SMTP_USER,
-      pass: SMTP_PASS,
-    },
-  });
-
-  const to = BOOKING_NOTIFY_EMAIL || SMTP_USER;
-
-  await transport.sendMail({
-    from: `"S Barbershop Bokning" <${SMTP_USER}>`,
-    to,
-    subject: `Ny bokning: ${input.service} ${input.date} ${input.time}`,
-    text: [
-      "Ny bokning inkom:",
-      `Namn: ${input.customerName}`,
-      `E-post: ${input.customerEmail}`,
-      `Telefon: ${input.customerPhone}`,
-      `Tjanst: ${input.service}`,
-      `Tid: ${input.date} ${input.time}`,
-      `Meddelande: ${input.note || "-"}`,
-    ].join("\n"),
-  });
-
-  return { sent: true as const };
-}
-
 export async function GET() {
   const dailyTimes = await readDailyTimes();
   const slots = buildUpcomingWeekSlots(dailyTimes);
@@ -187,18 +135,7 @@ export async function POST(req: Request) {
   bookings.push(bookingRecord);
   await writeBookings(bookings);
 
-  const emailResult = await sendBookingEmail({
-    customerName: body.customerName,
-    customerEmail: body.customerEmail,
-    customerPhone: body.customerPhone,
-    service: body.service,
-    date: selectedSlot.date,
-    time: selectedSlot.time,
-    note: body.note,
-  }).catch(() => ({ sent: false, reason: "send_failed" as const }));
-
   return NextResponse.json({
-    message: "Bokningen ar mottagen.",
-    emailSent: emailResult.sent,
+    message: "Bokningen ar mottagen och sparad.",
   });
 }

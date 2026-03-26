@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import Script from "next/script";
 
 type BookingRecord = {
   id: string;
@@ -32,6 +33,13 @@ export default async function SBookingsPage() {
 
   return (
     <main className="min-h-screen bg-background px-6 py-16">
+      <Script id="sbookings-auto-refresh" strategy="afterInteractive">
+        {`
+          setInterval(function () {
+            window.location.reload();
+          }, 300000);
+        `}
+      </Script>
       <div className="max-w-5xl mx-auto">
         <h1 className="text-4xl font-heading font-semibold mb-4">S Barbershop Bokningar</h1>
         <p className="text-muted-foreground mb-8">

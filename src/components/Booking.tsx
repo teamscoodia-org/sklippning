@@ -66,7 +66,7 @@ const Booking = () => {
       }),
     });
 
-    const data = (await res.json()) as { message?: string; emailSent?: boolean };
+    const data = (await res.json()) as { message?: string };
     if (!res.ok) {
       setMessage(data.message || "Nagot gick fel. Forsok igen.");
       setSubmitting(false);
@@ -77,11 +77,7 @@ const Booking = () => {
     setSelectedSlotId("");
     setFormState((prev) => ({ ...prev, note: "" }));
 
-    if (data.emailSent) {
-      setMessage("Bokningen ar klar! Vi har skickat bokningen via e-post.");
-    } else {
-      setMessage("Bokningen ar sparad, men e-post kunde inte skickas.");
-    }
+    setMessage(data.message || "Bokningen ar sparad.");
 
     setSubmitting(false);
   };
