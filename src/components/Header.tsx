@@ -16,6 +16,7 @@ const Header = () => {
         </div>
         <nav className="hidden md:flex items-center gap-8 text-sm font-body">
           <a href="#tjanster" className="text-muted-foreground hover:text-primary transition-colors">Tjänster</a>
+          <a href="#boka" className="text-muted-foreground hover:text-primary transition-colors">Boka</a>
           <a href="#om" className="text-muted-foreground hover:text-primary transition-colors">Om oss</a>
           <a href="#kontakt" className="text-muted-foreground hover:text-primary transition-colors">Kontakt</a>
           <a href="tel:0769541157" className="text-primary font-medium hover:opacity-90 transition-opacity">

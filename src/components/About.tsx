@@ -11,7 +11,7 @@ const About = () => {
           alltid en personlig upplevelse med fokus på kvalitet och stil.
         </p>
         <p className="text-muted-foreground leading-relaxed">
-          Välkommen in – ingen bokning behövs, drop-in gäller!
+          Välkommen in – bokning eller drop-in gäller!
         </p>
       </div>
     </section>

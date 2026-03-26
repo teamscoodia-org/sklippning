@@ -39,8 +39,7 @@ const Contact = () => {
               <div>
                 <h3 className="font-heading text-lg font-medium mb-1">Öppettider</h3>
                 <div className="text-muted-foreground space-y-1">
-                  <p>Måndag – Lördag: 09.30 – 17.00</p>
-                  <p>Söndag: 11.00 – 19.00</p>
+                  <p>Varje dag: 09.30 – 19.00</p>
                 </div>
               </div>
             </div>
