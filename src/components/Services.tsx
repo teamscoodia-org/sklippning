@@ -1,8 +1,8 @@
 import { Scissors, Clock, MapPin, Phone } from "lucide-react";
 
 const services = [
-  { name: "Herrklippning", price: "200 SEK", desc: "Klassisk herrklippning med rådgivning" },
-  { name: "Barnklippning", price: "160 SEK", desc: "Klippning för barn upp till 12 år" },
+  { name: "Herrklippning", price: "245 SEK", desc: "Klassisk herrklippning med rådgivning" },
+  { name: "Barnklippning", price: "180 SEK", desc: "Klippning för barn upp till 12 år" },
   { name: "Damklippning", price: "350 SEK", desc: "Klippning och styling för dam" },
   { name: "Skäggtrimning", price: "150 SEK", desc: "Trimning och formning av skägg" },
   { name: "Huvudrakning", price: "200 SEK", desc: "Noggrann rakning av hela huvudet" },
