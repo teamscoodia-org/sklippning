@@ -1,5 +1,3 @@
-import fs from "node:fs/promises";
-import path from "node:path";
 import { NextResponse } from "next/server";
 import { sendBookingEmails } from "@/lib/booking-email";
 
@@ -16,10 +14,6 @@ type BookingRecord = {
   createdAt: string;
 };
 
-const TIMESLOTS_PATH = path.join(process.cwd(), "data", "timeslots.json");
-const BOOKINGS_PATH = path.join(process.cwd(), "data", "bookings.json");
-const BOOKINGS_LOCK_PATH = path.join(process.cwd(), "data", "bookings.lock");
-
 type Slot = {
   id: string;
   date: string;
@@ -34,75 +28,28 @@ function createSlotId(date: string, time: string): string {
   return `${date}-${time.replace(":", "")}`;
 }
 
-async function readDailyTimes(): Promise<string[]> {
-  const raw = await fs.readFile(TIMESLOTS_PATH, "utf8");
-  return JSON.parse(raw) as string[];
-}
-
-async function readBookings(): Promise<BookingRecord[]> {
-  try {
-    const raw = await fs.readFile(BOOKINGS_PATH, "utf8");
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? (parsed as BookingRecord[]) : [];
-  } catch {
-    return [];
-  }
-}
-
-async function sleep(ms: number): Promise<void> {
-  await new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function acquireLock(
-  lockPath: string,
-  retries = 30,
-  delayMs = 100,
-): Promise<fs.FileHandle> {
-  for (let attempt = 0; attempt < retries; attempt += 1) {
-    try {
-      return await fs.open(lockPath, "wx");
-    } catch {
-      await sleep(delayMs);
-    }
-  }
-
-  throw new Error("Could not acquire file lock");
-}
-
-async function writeJsonAtomic(targetPath: string, data: unknown): Promise<void> {
-  const tempPath = `${targetPath}.tmp`;
-  const content = `${JSON.stringify(data, null, 2)}\n`;
-  await fs.writeFile(tempPath, content, "utf8");
-  await fs.rename(tempPath, targetPath);
-}
-
-async function saveBookingSafely(newBooking: BookingRecord): Promise<boolean> {
-  const lockHandle = await acquireLock(BOOKINGS_LOCK_PATH);
-  try {
-    const bookings = await readBookings();
-    const alreadyBooked = bookings.some(
-      (booking) => booking.slotId === newBooking.slotId,
-    );
-    if (alreadyBooked) {
-      return false;
-    }
-
-    bookings.push(newBooking);
-    await writeJsonAtomic(BOOKINGS_PATH, bookings);
-    return true;
-  } finally {
-    await lockHandle.close();
-    await fs.unlink(BOOKINGS_LOCK_PATH).catch(() => undefined);
-  }
-}
-
-function buildUpcomingWeekSlots(dailyTimes: string[]): Slot[] {
+function buildUpcomingWeekSlots(): Slot[] {
   const today = new Date();
+
+  // Static times for now
+  const dailyTimes = [
+    "09:00",
+    "10:00",
+    "11:00",
+    "12:00",
+    "13:00",
+    "14:00",
+    "15:00",
+    "16:00",
+    "17:00",
+  ];
+
   const slots: Slot[] = [];
 
   for (let i = 0; i < 7; i += 1) {
     const date = new Date(today);
     date.setDate(today.getDate() + i);
+
     const dateKey = toDateKey(date);
 
     for (const time of dailyTimes) {
@@ -118,76 +65,84 @@ function buildUpcomingWeekSlots(dailyTimes: string[]): Slot[] {
 }
 
 export async function GET() {
-  const dailyTimes = await readDailyTimes();
-  const slots = buildUpcomingWeekSlots(dailyTimes);
-  const bookings = await readBookings();
-  const bookedIds = new Set(bookings.map((booking) => booking.slotId));
-  const available = slots.filter((slot) => !bookedIds.has(slot.id));
+  const slots = buildUpcomingWeekSlots();
 
-  return NextResponse.json({ slots: available });
+  return NextResponse.json({
+    slots,
+  });
 }
 
 export async function POST(req: Request) {
-  const body = (await req.json()) as {
-    customerName?: string;
-    customerEmail?: string;
-    customerPhone?: string;
-    service?: string;
-    slotId?: string;
-    note?: string;
-  };
-
-  if (
-    !body.customerName ||
-    !body.customerEmail ||
-    !body.customerPhone ||
-    !body.service ||
-    !body.slotId
-  ) {
-    return NextResponse.json(
-      { message: "Fyll i alla obligatoriska falt." },
-      { status: 400 },
-    );
-  }
-
-  const dailyTimes = await readDailyTimes();
-  const slots = buildUpcomingWeekSlots(dailyTimes);
-  const selectedSlot = slots.find((slot) => slot.id === body.slotId);
-  if (!selectedSlot) {
-    return NextResponse.json({ message: "Tiden hittades inte." }, { status: 404 });
-  }
-
-  const bookingRecord: BookingRecord = {
-    id: crypto.randomUUID(),
-    slotId: body.slotId,
-    customerName: body.customerName,
-    customerEmail: body.customerEmail,
-    customerPhone: body.customerPhone,
-    service: body.service,
-    note: body.note || "",
-    date: selectedSlot.date,
-    time: selectedSlot.time,
-    createdAt: new Date().toISOString(),
-  };
-
-  const saved = await saveBookingSafely(bookingRecord);
-  if (!saved) {
-    return NextResponse.json(
-      { message: "Tiden ar redan bokad, valj en annan tid." },
-      { status: 409 },
-    );
-  }
-
-  let message = "Bokningen ar mottagen, sparad och bekraftelsemail har skickats.";
-
   try {
-    await sendBookingEmails(bookingRecord);
-  } catch (error) {
-    console.error("Booking saved but email sending failed.", error);
-    message = "Bokningen ar sparad, men e-post kunde inte skickas just nu.";
-  }
+    const body = (await req.json()) as {
+      customerName?: string;
+      customerEmail?: string;
+      customerPhone?: string;
+      service?: string;
+      slotId?: string;
+      note?: string;
+    };
 
-  return NextResponse.json({
-    message,
-  });
+    if (
+      !body.customerName ||
+      !body.customerEmail ||
+      !body.customerPhone ||
+      !body.service ||
+      !body.slotId
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Please fill all required fields.",
+        },
+        { status: 400 }
+      );
+    }
+
+    const slots = buildUpcomingWeekSlots();
+
+    const selectedSlot = slots.find(
+      (slot) => slot.id === body.slotId
+    );
+
+    if (!selectedSlot) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Selected time slot not found.",
+        },
+        { status: 404 }
+      );
+    }
+
+    const bookingRecord: BookingRecord = {
+      id: crypto.randomUUID(),
+      slotId: body.slotId,
+      customerName: body.customerName,
+      customerEmail: body.customerEmail,
+      customerPhone: body.customerPhone,
+      service: body.service,
+      note: body.note || "",
+      date: selectedSlot.date,
+      time: selectedSlot.time,
+      createdAt: new Date().toISOString(),
+    };
+
+    await sendBookingEmails(bookingRecord);
+
+    return NextResponse.json({
+      success: true,
+      message: "Booking email sent successfully.",
+    });
+  } catch (error) {
+    console.error("BOOKING ERROR:", error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Failed to process booking.",
+      },
+      { status: 500 }
+    );
+  }
 }
