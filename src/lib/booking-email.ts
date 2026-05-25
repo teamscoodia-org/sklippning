@@ -177,12 +177,13 @@ export async function sendBookingEmails(
   const config = getMailConfig();
   const transporter = getTransporter(config);
   const from = `"${config.fromName}" <${config.fromEmail}>`;
+  const customerEmail = booking.customerEmail.trim().toLowerCase();
 
   await Promise.all([
     transporter.sendMail({
       from,
       to: config.notificationEmail,
-      replyTo: booking.customerEmail,
+      replyTo: customerEmail,
       subject: `Ny bokning - ${booking.date} ${booking.time}`,
       text: buildTextMessage("En ny bokning har sparats.", booking),
       html: buildHtmlMessage(
@@ -193,7 +194,7 @@ export async function sendBookingEmails(
     }),
     transporter.sendMail({
       from,
-      to: booking.customerEmail,
+      to: customerEmail,
       subject: `Bekraftelse pa din bokning - ${booking.date} ${booking.time}`,
       text: buildTextMessage(
         "Tack! Din bokning hos S Barbershop ar mottagen.",

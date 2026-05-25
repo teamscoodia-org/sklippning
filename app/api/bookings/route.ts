@@ -20,6 +20,14 @@ type Slot = {
   time: string;
 };
 
+function normalizeField(value?: string): string {
+  return value?.trim() ?? "";
+}
+
+function isValidEmail(value: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
 function toDateKey(input: Date): string {
   return input.toISOString().slice(0, 10);
 }
@@ -83,12 +91,19 @@ export async function POST(req: Request) {
       note?: string;
     };
 
+    const customerName = normalizeField(body.customerName);
+    const customerEmail = normalizeField(body.customerEmail).toLowerCase();
+    const customerPhone = normalizeField(body.customerPhone);
+    const service = normalizeField(body.service);
+    const slotId = normalizeField(body.slotId);
+    const note = normalizeField(body.note);
+
     if (
-      !body.customerName ||
-      !body.customerEmail ||
-      !body.customerPhone ||
-      !body.service ||
-      !body.slotId
+      !customerName ||
+      !customerEmail ||
+      !customerPhone ||
+      !service ||
+      !slotId
     ) {
       return NextResponse.json(
         {
@@ -99,11 +114,19 @@ export async function POST(req: Request) {
       );
     }
 
+    if (!isValidEmail(customerEmail)) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Please enter a valid email address.",
+        },
+        { status: 400 }
+      );
+    }
+
     const slots = buildUpcomingWeekSlots();
 
-    const selectedSlot = slots.find(
-      (slot) => slot.id === body.slotId
-    );
+    const selectedSlot = slots.find((slot) => slot.id === slotId);
 
     if (!selectedSlot) {
       return NextResponse.json(
@@ -117,12 +140,12 @@ export async function POST(req: Request) {
 
     const bookingRecord: BookingRecord = {
       id: crypto.randomUUID(),
-      slotId: body.slotId,
-      customerName: body.customerName,
-      customerEmail: body.customerEmail,
-      customerPhone: body.customerPhone,
-      service: body.service,
-      note: body.note || "",
+      slotId,
+      customerName,
+      customerEmail,
+      customerPhone,
+      service,
+      note,
       date: selectedSlot.date,
       time: selectedSlot.time,
       createdAt: new Date().toISOString(),
