@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { NextResponse } from "next/server";
+import { sendBookingEmails } from "@/lib/booking-email";
 
 type BookingRecord = {
   id: string;
@@ -177,7 +178,16 @@ export async function POST(req: Request) {
     );
   }
 
+  let message = "Bokningen ar mottagen, sparad och bekraftelsemail har skickats.";
+
+  try {
+    await sendBookingEmails(bookingRecord);
+  } catch (error) {
+    console.error("Booking saved but email sending failed.", error);
+    message = "Bokningen ar sparad, men e-post kunde inte skickas just nu.";
+  }
+
   return NextResponse.json({
-    message: "Bokningen ar mottagen och sparad.",
+    message,
   });
 }
