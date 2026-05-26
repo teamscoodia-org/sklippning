@@ -12,6 +12,7 @@ type Slot = {
 const services = [
   "Herrklippning",
   "Barnklippning",
+  "Studentklippning",
   "Damklippning",
   "Skäggtrimning",
   "Huvudrakning",
