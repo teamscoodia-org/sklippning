@@ -26,7 +26,7 @@ describe("POST /api/bookings", () => {
           customerEmail: " Customer@Example.com ",
           customerPhone: " 0701234567 ",
           service: " Herrklippning ",
-          slotId: buildSlotId(new Date(), "09:00"),
+          slotId: buildSlotId(new Date(), "09:30"),
           note: " Test ",
         }),
       }),
@@ -54,7 +54,7 @@ describe("POST /api/bookings", () => {
           customerEmail: "not-an-email",
           customerPhone: "0701234567",
           service: "Herrklippning",
-          slotId: buildSlotId(new Date(), "09:00"),
+          slotId: buildSlotId(new Date(), "09:30"),
         }),
       }),
     );
